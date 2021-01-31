@@ -21,7 +21,7 @@ class UserAPI(MethodView):
             # Extract data from User Models
             user_list = [ {"id": user.id, "email": user.email } for user in users ]
 
-            # User List is non-empty
+            # Create response object
             responseObject = {
                 'status': 'success',
                 'message': 'Successfully queried database.',
@@ -29,10 +29,11 @@ class UserAPI(MethodView):
             }
             return make_response(jsonify(responseObject)), 201
         except Exception as e:
-            # Error occurred
+            # Caught an exception
             responseObject = {
                 'status': 'fail',
-                'message': 'Some error occurred. Please try again.'
+                'message': 'Some error occurred. Please try again.',
+                'user_list': []
             }
             return make_response(jsonify(responseObject)), 401
 
