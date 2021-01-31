@@ -27,7 +27,7 @@ class UserAPI(MethodView):
                 'message': 'Successfully queried database.',
                 'user_list': user_list
             }
-            return make_response(jsonify(responseObject)), 201
+            return make_response(jsonify(responseObject)), 200
         except Exception as e:
             # Caught an exception
             responseObject = {
