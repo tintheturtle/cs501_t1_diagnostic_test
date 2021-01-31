@@ -14,46 +14,27 @@ class UserAPI(MethodView):
     """
 
     def get(self):        
-    	responseObject = {
-    		'ping': 'pong',
-    	}
-    	return make_response(jsonify(responseObject)), 201
+    	# Get all users
+        users = User.query.all()
 
-    def post(self):
+        try:
+            # Extract data from User Models
+            user_list = [ {"id": user.id, "email": user.email } for user in users ]
 
-        # Get all users
-        users = User.query.filter().all()
-
-        # Create empty array
-        user_list = []
-
-        # Extract data from User Models
-        for user in users:
-            user_list += [ {"id": user.id, "email": user.email } ]
-
-        if not users:
-            # Empty List
+            # User List is non-empty
             responseObject = {
                 'status': 'success',
-                'message': 'Database is empty.'
+                'message': 'Successfully queried database.',
+                'user_list': user_list
             }
-            return make_response(jsonify(responseObject)), 200
-        else:
-            try:
-                # User List is non-empty
-                responseObject = {
-                    'status': 'success',
-                    'message': 'Successfully queried database.',
-                    'user_list': user_list
-                }
-                return make_response(jsonify(responseObject)), 201
-            except Exception as e:
-                # Error occurred
-                responseObject = {
-                    'status': 'fail',
-                    'message': 'Some error occurred. Please try again.'
-                }
-                return make_response(jsonify(responseObject)), 401
+            return make_response(jsonify(responseObject)), 201
+        except Exception as e:
+            # Error occurred
+            responseObject = {
+                'status': 'fail',
+                'message': 'Some error occurred. Please try again.'
+            }
+            return make_response(jsonify(responseObject)), 401
 
 # define the API resources
 user_view = UserAPI.as_view('user_api')
@@ -62,5 +43,5 @@ user_view = UserAPI.as_view('user_api')
 user_blueprint.add_url_rule(
     '/users/index',
     view_func=user_view,
-    methods=['POST', 'GET']
+    methods=['GET']
 )
